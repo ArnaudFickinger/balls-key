@@ -9,6 +9,7 @@ from .rendering import *
 
 # Size in pixels of a tile in the full-scale human view
 TILE_PIXELS = 32
+TILE_PIXELS_AGENTS = 3
 
 # Map of color names to RGB values
 COLORS = {
@@ -671,15 +672,21 @@ class MiniGridEnv(gym.Env):
 
         # Observations are dictionaries containing an
         # encoding of the grid and a textual 'mission' string
+        # self.observation_space = spaces.Box(
+        #     low=0,
+        #     high=255,
+        #     shape=(self.agent_view_size, self.agent_view_size, 3),
+        #     dtype='uint8'
+        # )
         self.observation_space = spaces.Box(
             low=0,
             high=255,
-            shape=(self.agent_view_size, self.agent_view_size, 3),
+            shape=(agent_view_size * TILE_PIXELS_AGENTS, agent_view_size * TILE_PIXELS_AGENTS, 3),
             dtype='uint8'
         )
-        self.observation_space = spaces.Dict({
-            'image': self.observation_space
-        })
+        # self.observation_space = spaces.Dict({
+        #     'image': self.observation_space
+        # })
 
         # Range of possible rewards
         self.reward_range = (0, 1)
@@ -1204,17 +1211,7 @@ class MiniGridEnv(gym.Env):
         # Encode the partially observable view into a numpy array
         image = grid.encode(vis_mask)
 
-        assert hasattr(self, 'mission'), "environments must define a textual mission string"
-
-        # Observations are dictionaries containing:
-        # - an image (partially observable view of the environment)
-        # - the agent's direction/orientation (acting as a compass)
-        # - a textual mission string (instructions for the agent)
-        obs = {
-            'image': image,
-            'direction': self.agent_dir,
-            'mission': self.mission
-        }
+        obs = image
 
         return obs
 
@@ -1290,7 +1287,6 @@ class MiniGridEnv(gym.Env):
 
         if mode == 'human':
             self.window.show_img(img)
-            self.window.set_caption(self.mission)
 
         return img
 

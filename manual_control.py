@@ -9,8 +9,7 @@ from gym_minigrid.wrappers import *
 from gym_minigrid.window import Window
 
 def redraw(img):
-    if not args.agent_view:
-        img = env.render('rgb_array', tile_size=args.tile_size)
+    img = env.render('rgb_array', tile_size=args.tile_size)
 
     window.show_img(img)
 
@@ -19,10 +18,6 @@ def reset():
         env.seed(args.seed)
 
     obs = env.reset()
-
-    if hasattr(env, 'mission'):
-        print('Mission: %s' % env.mission)
-        window.set_caption(env.mission)
 
     redraw(obs)
 
@@ -58,13 +53,13 @@ def key_handler(event):
         return
 
     # Spacebar
-    if event.key == ' ':
+    if event.key == 't':
         step(env.actions.toggle)
         return
-    if event.key == 'pageup':
+    if event.key == 'p':
         step(env.actions.pickup)
         return
-    if event.key == 'pagedown':
+    if event.key == 'd':
         step(env.actions.drop)
         return
 
@@ -76,7 +71,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     "--env",
     help="gym environment to load",
-    default='MiniGrid-MultiRoom-N6-v0'
+    default='MiniGrid-Dynamic-6x6-v0'
 )
 parser.add_argument(
     "--seed",
@@ -92,7 +87,7 @@ parser.add_argument(
 )
 parser.add_argument(
     '--agent_view',
-    default=False,
+    default=True,
     help="draw the agent sees (partially observable view)",
     action='store_true'
 )
@@ -101,9 +96,9 @@ args = parser.parse_args()
 
 env = gym.make(args.env)
 
-if args.agent_view:
-    env = RGBImgPartialObsWrapper(env)
-    env = ImgObsWrapper(env)
+# if args.agent_view:
+#     env = RGBImgPartialObsWrapper(env)
+#     env = ImgObsWrapper(env)
 
 window = Window('gym_minigrid - ' + args.env)
 window.reg_key_handler(key_handler)

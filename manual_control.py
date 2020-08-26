@@ -10,7 +10,6 @@ from gym_minigrid.window import Window
 
 def redraw(img):
     img = env.render('rgb_array', tile_size=args.tile_size)
-
     window.show_img(img)
 
 def reset():
@@ -23,6 +22,7 @@ def reset():
 
 def step(action):
     obs, reward, done, info = env.step(action)
+    window_2.show_img(obs)
     print('step=%s, reward=%.2f' % (env.step_count, reward))
 
     if done:
@@ -100,10 +100,13 @@ env = gym.make(args.env)
 #     env = RGBImgPartialObsWrapper(env)
 #     env = ImgObsWrapper(env)
 
+window_2 = Window('obs gym_minigrid - ' + args.env)
 window = Window('gym_minigrid - ' + args.env)
+
 window.reg_key_handler(key_handler)
 
 reset()
 
 # Blocking event loop
+window_2.show(block=True)
 window.show(block=True)

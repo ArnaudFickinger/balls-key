@@ -295,7 +295,7 @@ class Key(WorldObj):
         fill_coords(img, point_in_circle(cx=0.56, cy=0.28, r=0.064), (0,0,0))
 
 class Ball(WorldObj):
-    def __init__(self, color='blue'):
+    def __init__(self, color='red'):
         super(Ball, self).__init__('ball', color)
 
     def can_pickup(self):

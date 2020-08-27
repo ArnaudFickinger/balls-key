@@ -112,6 +112,7 @@ class DynamicEnv(MiniGridEnv):
 
     def reset(self):
         obs = super().reset()
+        obs = self.get_obs_render(obs, tile_size=TILE_PIXELS_AGENTS)
         self.moving_objects=True
         return obs
 
